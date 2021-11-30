@@ -36,7 +36,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
       with:
         push: false
-        dockerfile: go/src/github.com/TUB-CNPE-TB/catalogue/docker/paymentsvc/Dockerfile
+        dockerfile: go/src/github.com/TUB-CNPE-TB/payment/docker/paymentsvc/Dockerfile
         path: go/src/github.com/TUB-CNPE-TB/payment
         repository: ${{ env.GROUP }}/${{ env.REPO }}
         tag_with_ref: true
