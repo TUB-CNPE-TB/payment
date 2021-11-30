@@ -1,16 +1,17 @@
-FROM golang:1.7
+FROM golang:1.17-alpine as stage
 
 COPY . /go/src/github.com/microservices-demo/payment/
+WORKDIR /go/src/github.com/microservices-demo/payment
 
-RUN go get -u github.com/FiloSottile/gvt
-RUN cd /go/src/github.com/microservices-demo/payment/ && gvt restore
+RUN GO111MODULE=on go mod init cmd/paymentsvc/main.go
+RUN GO111MODULE=on go mod vendor
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app github.com/microservices-demo/payment/cmd/paymentsvc
+RUN go build -o /app cmd/paymentsvc/main.go
 
-FROM alpine:3.4
+FROM golang:1.17-alpine
 
 WORKDIR /
-COPY --from=0 /app /app
+COPY --from=stage /app /app
 
 ENV	SERVICE_USER=myuser \
 	SERVICE_UID=10001 \
